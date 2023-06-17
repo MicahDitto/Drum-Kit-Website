@@ -1,73 +1,90 @@
-// var numDrumBtns = document.querySelectorAll(".drum").length;
-// for (var i = 0; i < numDrumBtns; i++) {
+// let numDrumBtns = document.querySelectorAll(".drum").length;
+// for (let i = 0; i < numDrumBtns; i++) {
 //   document.querySelectorAll(".drum")[i].addEventListener("click", function () {
 //     alert("Button clicked!");}
 //   );
 // }
 
+//Buttons Array
+let keys = [
+  { key: "q", soundForKey: "sounds/8 Bits/Boom1.wav" },
+  { key: "w", soundForKey: "sounds/8 Bits/Clap.wav" },
+  { key: "e", soundForKey: "sounds/8 Bits/Click1.wav" },
+  { key: "i", soundForKey: "sounds/808/Hihat_open_2.wav" },
+  { key: "o", soundForKey: "sounds/808/Hihat1_closed.wav" },
+  { key: "p", soundForKey: "sounds/808/Kick.wav" },
+  { key: "a", soundForKey: "sounds/808/Snare.wav" },
+  { key: "s", soundForKey: "sounds/Claps/Clap1.WAV" },
+  { key: "d", soundForKey: "sounds/Crash/Crash_1.WAV" },
+  { key: "j", soundForKey: "sounds/Hihats/Hihat_1_closed.wav" },
+  { key: "k", soundForKey: "sounds/Kicks/Hard_Kick_1.WAV" },
+  { key: "l", soundForKey: "sounds/Percussion/Conga_1.wav" },
+  { key: "z", soundForKey: "sounds/Percussion/FX1.wav" },
+  { key: "x", soundForKey: "sounds/tom-1.mp3" },
+  { key: "c", soundForKey: "sounds/tom-2.mp3" },
+  { key: "n", soundForKey: "sounds/tom-3.mp3" },
+  { key: "m", soundForKey: "sounds/tom-4.mp3" },
+  { key: ",", soundForKey: "sounds/Percussion/Perc10.wav" }
+];
+
 //Detecting Button Press
-var numDrumBtns = document.querySelectorAll(".drum").length;
-for (var i = 0; i < numDrumBtns; i++) {
+let numDrumBtns = document.querySelectorAll(".drum").length;
+for (let i = 0; i < numDrumBtns; i++) {
   document.querySelectorAll(".drum")[i].addEventListener("click", btnClicked);
 }
 
 function btnClicked() {
-  
-  var btnInnerHTML = this.innerHTML;
+  let btnInnerHTML = this.innerHTML;
   makeSound(btnInnerHTML);
-  
+
   btnAnimation(btnInnerHTML);
   // alert("Button clicked!");
   //   this.style.color = "white";
 }
 
 document.addEventListener("keydown", function(event) {
-  makeSound(event.key);
-  btnAnimation(event.key);
+  let index = keys.findIndex(item => item.key === event.key);
+
+  // If the key exists in the array, update the sound
+  if (index !== -1) {
+    makeSound(event.key);
+    btnAnimation(event.key);
+  } else {
+    console.log("Key not found in the soundboard.");
+  }
 });
 
-function makeSound(key) {
-  switch (key) {
-    case "w":
-      var crash = new Audio("sounds/crash.mp3");
-      crash.play();
-      break;
-    case "a":
-      var kick = new Audio("sounds/kick-bass.mp3");
-      kick.play();
-      break;
-    case "s":
-      var snare = new Audio("sounds/snare.mp3");
-      snare.play();
-      break;
-    case "d":
-      var tom1 = new Audio("sounds/tom-1.mp3");
-      tom1.play();
-      break;
-    case "j":
-      var tom2 = new Audio("sounds/tom-2.mp3");
-      tom2.play();
-      break;
-    case "k":
-      var tom3 = new Audio("sounds/tom-3.mp3");
-      tom3.play();
-      break;
-    case "l":
-      var tom4 = new Audio("sounds/tom-4.mp3");
-      tom4.play();
-      break;
+function changeSound(key, newSound) {
+  // Find the index of the key in the soundboardArray
+  let index = keys.findIndex(item => item.key === key);
 
-    default:
-      console.log(btnInnerHTML);
+  // If the key exists in the array, update the sound
+  if (index !== -1) {
+    keys[index].soundForKey = new Audio(newSound);
+    console.log("Sound changed successfully!");
+  } else {
+    console.log("Key not found in the soundboard.");
   }
 }
 
-function btnAnimation (currentKey) {
-    var activeButton = document.querySelector("." + currentKey);
-    // activeButton.setAttribute("class", ".pressed");
-    activeButton.classList.add("pressed");
-    setTimeout(function() {
-        activeButton.classList.remove("pressed");
-    }, 100);
-    
+function makeSound(key) {
+  // Find the sound file associated with the key
+  let sound = keys.find(item => item.key === key);
+
+  // If the key exists in the array, play the sound
+  if (sound) {
+    let audio = new Audio(sound.soundForKey);
+    audio.play();
+  } else {
+    console.log("Key not found in the soundboard.");
+  }
+}
+
+function btnAnimation(currentKey) {
+  let activeButton = document.querySelector("." + currentKey);
+  // activeButton.setAttribute("class", ".pressed");
+  activeButton.classList.add("pressed");
+  setTimeout(function() {
+    activeButton.classList.remove("pressed");
+  }, 100);
 }
